@@ -27,4 +27,4 @@ jobs:
       run: npm run build --if-present
     - name: Push build to S3 with AWS CLI
       run: |
-        aws s3 sync build/* s3://s3-react-bucket-gh
+        aws s3 sync build s3://s3-react-bucket-gh
