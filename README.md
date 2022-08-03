@@ -30,7 +30,8 @@ The file is in `.github/workflows/deploy-to-s3.yaml`.
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": "repo:pyderator/deploy-to-aws-s3:ref:refs/heads/main"
         }
       }
     },
@@ -46,8 +47,14 @@ The file is in `.github/workflows/deploy-to-s3.yaml`.
 }
 ```
 
+NOTE:  
+`"token.actions.githubusercontent.com:sub": "repo:pyderator/deploy-to-aws-s3:ref:refs/heads/main"`
+The above check is for personal github account only. Incase of org, use
+`"token.actions.githubusercontent.com:sub": "repo:octo-org/octo-repo:ref:refs/heads/octo-branch"`
+
 # More Info
 
 https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect
 https://stackoverflow.com/questions/69883862/not-authorized-to-perform-ststagsession-on-resource
 https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-policies-s3.html
+https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services
