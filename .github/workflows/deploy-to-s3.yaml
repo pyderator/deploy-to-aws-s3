@@ -1,0 +1,29 @@
+name: Deploy react app to S3
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: "16.x"
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-to-assume: ${{ secrets.AWS_S3_UPLOAD_ROLE_ARN }}
+        aws-region: ${{ secrets.AWS_REGION }}
+    - name: Install Packages 
+      run: npm ci
+    - name: Build
+      run: npm run build --if-present
+    - name: Push build to S3 with AWS CLI
+      run: |
+        aws s3 sync build/* s3://s3-react-bucket-gh
